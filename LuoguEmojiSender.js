@@ -2,10 +2,11 @@
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
 // @version      1.0
-// @description  A TamperMonkey addon which can help you send QQ emoji conveniently.
+// @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
 // @match        http://www.luogu.com.cn/*
+// @updateURL   https://raw.fastgit.org/Maxmilite/LuoguEmojiSender/main/LuoguEmojiSender.js
 // ==/UserScript==
 
 (function() {
