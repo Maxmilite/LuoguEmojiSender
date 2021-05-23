@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.3
+// @version      1.3.1
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -33,6 +33,8 @@
     // 增加了更多的 QQ 图片，更改了图床
     // 1.3 更新内容：
     // 进一步优化操作逻辑，修复了图片加载的一个BUG，现在可以无忧无虑使用无缝模式了
+    // 1.3.1 更新内容：
+    // 紧急修复菜刀表情所导致的错位问题，现在菜刀暂时禁用。
 
     const replaceElement = {
         "/aini": "![qq_emoji: aini](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/aini.gif)",
@@ -53,7 +55,7 @@
         "/bt": "![qq_emoji: bt](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bt.gif)",
         "/bu": "![qq_emoji: bu](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bu.gif)",
         "/bz": "![qq_emoji: bz](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bz.gif)",
-        "/cd": "![qq_emoji: cd](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cd.gif)",
+        // "/cd": "![qq_emoji: cd](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cd.gif)",
         "/cengyiceng": "![qq_emoji: cengyiceng](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cengyiceng.gif)",
         "/cg": "![qq_emoji: cg](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cg.gif)",
         "/ch": "![qq_emoji: ch](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/ch.gif)",
@@ -210,22 +212,29 @@
 
     function main() {
         let stringTochange = new String, sourceString = new String, newString = new String;
-        if (typeof markdownPalettes != "undefined")
+        if (typeof markdownPalettes != "undefined") {
             stringToChange = markdownPalettes.content, sourceString = markdownPalettes.content;
-        else if (document.getElementById("feed-content") != null)
+        }
+        else if (document.getElementById("feed-content") != null) {
             stringToChange = document.getElementById("feed-content").value, sourceString = document.getElementById("feed-content").value;
+        }
         else
             return false;
         for (let i in replaceElement) {
             newString = prefix + i + suffix;
-            stringToChange = stringToChange.replaceAll(newString, replaceElement[i]);
+            while (stringTochange.indexOf(newString) != -1) {
+                stringToChange = stringToChange.replace(newString, replaceElement[i]);
+            }
         }
         for (let i in userElement) {
             newString = prefix + i + suffix;
-            stringToChange = stringToChange.replaceAll(newString, userElement[i]);
+            while (stringTochange.indexOf(newString) != -1) {
+                stringToChange = stringToChange.replace(newString, userElement[i]);
+            }
         }
-        if (typeof markdownPalettes != "undefined")
+        if (typeof markdownPalettes != "undefined") {
             markdownPalettes.content = stringToChange;
+        }
         else if (document.getElementById("feed-content") != null)
             document.getElementById("feed-content").value = stringToChange;
         if (stringToChange == sourceString)
@@ -234,25 +243,13 @@
             return true;
     }
 
-    // It seemed this function didn't work :(
-    // To be fixed
-    function moveEnd() {
-        var move = jQuery.Event("keydown");
-        move.keyCode = 35;
-        move.which = 35;
-        $(window).trigger(move);
-    }
 
     document.addEventListener("keydown", function () {
-        if (main() == true) {
-            moveEnd();
-        }
+        main();
     })
     
     document.addEventListener("click", function () {
-        if (main() == true) {
-            moveEnd();
-        }
+        main();
     })
 
 })();
