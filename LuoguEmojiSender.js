@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.1
+// @version      1.2
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -205,8 +205,8 @@
         "/zt": "![/zt](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zt.gif)",
         "/zuotj": "![/zuotj](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zuotj.gif)"
     };
-    
-    document.addEventListener("keypress", function () {
+
+    function main() {
         for (let i in replaceElement) {
             let newString = prefix + i + suffix;
             if (typeof markdownPalettes != "undefined") {
@@ -225,26 +225,13 @@
                 document.getElementById("feed-content").value = document.getElementById("feed-content").value.replaceAll(newString, userElement[i]);
             }
         }
+    }
+
+    document.addEventListener("keypress", function () {
+        main();
     })
 
     document.addEventListener("click", function () {
-        for (let i in replaceElement) {
-            let newString = prefix + i + suffix;
-            if (typeof markdownPalettes != "undefined") {
-                markdownPalettes.content = markdownPalettes.content.replaceAll(newString, replaceElement[i]);
-            }
-            if (document.getElementById("feed-content") != null) {
-                document.getElementById("feed-content").value = document.getElementById("feed-content").value.replaceAll(newString, replaceElement[i]);
-            }
-        }
-        for (let i in userElement) {
-            let newString = prefix + i + suffix;
-            if (typeof markdownPalettes != "undefined") {
-                markdownPalettes.content = markdownPalettes.content.replaceAll(newString, userElement[i]);
-            }
-            if (document.getElementById("feed-content") != null) {
-                document.getElementById("feed-content").value = document.getElementById("feed-content").value.replaceAll(newString, userElement[i]);
-            }
-        }
+        main();
     })
 })();
