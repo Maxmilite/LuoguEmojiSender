@@ -23,6 +23,8 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 
 1.2 更新内容：增加了更多的 QQ 图片，更改了图床（感谢 [洛谷: 犇犇犇犇](https://www.luogu.com.cn/user/35998) 的贡献）；优化函数逻辑。
 
+1.3 更新内容：进一步优化操作逻辑，修复了图片加载的一个BUG，现在可以无忧无虑使用无缝模式了。
+
 # 1. 使用方法
 
 ## 0. 安装 Tampermonkey
