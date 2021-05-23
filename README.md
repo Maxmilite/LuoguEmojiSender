@@ -17,6 +17,7 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 使用比较方便，上手难度极低。
 
 1.1 更新内容：优化操作逻辑，增加用户配置区。
+1.2 更新内容：增加了更多的 QQ 图片，更改了图床
 
 # 1. 使用方法
 
@@ -36,7 +37,7 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 
 之后进行任意一个操作 (包括点击鼠标，敲击键盘等)，上述格式内容就会自动被替换为表情。
 
-目前支持的表情在这篇文章中：[https://studyingfather.blog.luogu.org/qq-stickers](https://studyingfather.blog.luogu.org/qq-stickers)。
+目前总共支持 171 种表情，支持的表情在这篇文章中：    [https://www.luogu.com.cn/blog/12cow/qq-biao-qing-ku](https://www.luogu.com.cn/blog/12cow/qq-biao-qing-ku)。
 
 如果您有意愿对表情进行补充，请直接发表 issue 或 pull request，我会进行处理并将您列入贡献者名单，不胜感激。
 
