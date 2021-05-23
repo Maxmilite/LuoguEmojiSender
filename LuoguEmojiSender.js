@@ -7,8 +7,6 @@
 // @match        https://www.luogu.com.cn/*
 // @match        http://www.luogu.com.cn/*
 // @updateURL   https://raw.fastgit.org/Maxmilite/LuoguEmojiSender/main/LuoguEmojiSender.js
-// @require      https://cdn.luogu.com.cn/js/jquery-2.1.1.min.js
-// @require      https://cdn.luogu.com.cn/markdown-palettes/markdown-palettes.min.js?ver=20190219
 // ==/UserScript==
 
 (function () {
