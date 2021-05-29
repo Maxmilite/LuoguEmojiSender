@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.3.1
+// @version      1.4
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
 // @match        http://www.luogu.com.cn/*
-// @updateURL   https://raw.fastgit.org/Maxmilite/LuoguEmojiSender/main/LuoguEmojiSender.js
+// @grant        unsafeWindow
+// @require     https://code.jquery.com/jquery-2.1.1.min.js
 // ==/UserScript==
 
 (function () {
@@ -14,18 +15,24 @@
 
     // 此项定义前后缀功能，用于表情的识别，以默认配置为例
     // 如果在此配置下，当且仅当输入的内容为大括号包裹的qq表情代码（即 "{/代码}"）时才会进行替换操作。
-    // 当然，您可以直接将其设置为空字符串，来达到无缝衔接的效果
-    const prefix = "{", suffix = "}";
+    // 当然，您可以直接将其设置为空字符串，来达到无缝衔接的效果。
+    const prefix = "", suffix = "";
 
-    // 此处为用户个性化设置区，输入格式按照 JSON 格式输入
+    // 此处为用户个性化设置区，输入格式按照 JSON 格式输入。
     // 格式：" "表情代码": "![...](...)", "
     // 请注意，如果不是最后一行，该行后必须添加逗号。
     // 样例：" "/亲亲": "![](![qq_emoji: qq](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/qq.gif))", "
     const userElement = {
-
+        
     }
 
     // -------------------------上方为用户修改配置区--------------------------------
+
+    // 这是第一代 LuoguEmojiSender 的最终版本，内容已经相当完善，此后作者将会着力于第二代的开发，第一代基本不会更新。
+    // 最后更新时间 2021.5.30
+    // 最后版本 1.4
+    // 第二代目标：实现图形化，近似于 QQ 发送表情
+    // 作者在这个版本留下了一个臭了的彩蛋
 
     // 1.1 更新内容：
     // 优化操作逻辑，增加用户配置区
@@ -34,7 +41,10 @@
     // 1.3 更新内容：
     // 进一步优化操作逻辑，修复了图片加载的一个BUG，现在可以无忧无虑使用无缝模式了
     // 1.3.1 更新内容：
-    // 紧急修复菜刀表情所导致的错位问题，现在菜刀暂时禁用。
+    // 紧急修复一个由菜刀表情引发的严重BUG
+    // 1.4 更新内容：
+    // 修复了 1.3.1 版本更新日志版本号的bug，修复输入问题，第一代最终版本
+    // 修复光标漂移问题，修复无缝衔接问题，修复菜刀表情问题，修复若干问题
 
     const replaceElement = {
         "/aini": "![qq_emoji: aini](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/aini.gif)",
@@ -55,7 +65,7 @@
         "/bt": "![qq_emoji: bt](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bt.gif)",
         "/bu": "![qq_emoji: bu](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bu.gif)",
         "/bz": "![qq_emoji: bz](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/bz.gif)",
-        // "/cd": "![qq_emoji: cd](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cd.gif)",
+        "/cd": "![qq_emoji: cd](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cd.gif)",
         "/cengyiceng": "![qq_emoji: cengyiceng](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cengyiceng.gif)",
         "/cg": "![qq_emoji: cg](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/cg.gif)",
         "/ch": "![qq_emoji: ch](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/ch.gif)",
@@ -207,48 +217,84 @@
         "/zk": "![qq_emoji: zk](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zk.gif)",
         "/zq": "![qq_emoji: zq](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zq.gif)",
         "/zt": "![qq_emoji: zt](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zt.gif)",
-        "/zuotj": "![qq_emoji: zuotj](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zuotj.gif)"
+        "/zuotj": "![qq_emoji: zuotj](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/zuotj.gif)",
+        "/114514": "[![为什么您会找到一个在 QQ 表情里没有的东西](https://z3.ax1x.com/2021/05/30/2Eook9.png)](https://github.com/Maxmilite/LuoguEmojiSender)"
     };
 
-    function main() {
-        let stringTochange = new String, sourceString = new String, newString = new String;
-        if (typeof markdownPalettes != "undefined") {
-            stringToChange = markdownPalettes.content, sourceString = markdownPalettes.content;
+    const $ = unsafeWindow.$ || jQuery, markdownPalettes = unsafeWindow.markdownPalettes;
+
+    function getSubString(sourceString = "", findPos = -1) {
+        if (findPos == -1) {
+            return "image";
         }
-        else if (document.getElementById("feed-content") != null) {
-            stringToChange = document.getElementById("feed-content").value, sourceString = document.getElementById("feed-content").value;
+        if (findPos <= 5) {
+            return "";
         }
-        else
-            return false;
+        let resultString = "";
+        for (let i = findPos - 5; i < findPos; i++) {
+            resultString += sourceString[i];
+        }
+        if (resultString == "tps:/") {
+            return "image";
+        }
+        return resultString;
+    }
+    
+    function sliceString(sourceString = "", leftSide = 0, rightSide = 0) {
+        let resultString = ""
+        for (let i = leftSide; i <= rightSide; i++) {
+            resultString += sourceString[i];
+        }
+        return resultString;
+    }
+
+    function replaceString(stringToChange = "") {
+        let isChanged = false;
         for (let i in replaceElement) {
-            newString = prefix + i + suffix;
-            while (stringTochange.indexOf(newString) != -1) {
-                stringToChange = stringToChange.replace(newString, replaceElement[i]);
+            let changedStr = prefix + i + suffix;
+            if (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "image") {
+                isChanged = true;
+                // stringToChange = stringToChange.replace(changedStr, replaceElement[i]);
+                stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + replaceElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
             }
         }
         for (let i in userElement) {
-            newString = prefix + i + suffix;
-            while (stringTochange.indexOf(newString) != -1) {
-                stringToChange = stringToChange.replace(newString, userElement[i]);
+            let changedStr = prefix + i + suffix;
+            if (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "image") {
+                isChanged = true;
+                // stringToChange = stringToChange.replace(changedStr, userElement[i]);
+                stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + userElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
             }
         }
-        if (typeof markdownPalettes != "undefined") {
-            markdownPalettes.content = stringToChange;
+        if (isChanged == true) {
+            return stringToChange;
         }
-        else if (document.getElementById("feed-content") != null)
-            document.getElementById("feed-content").value = stringToChange;
-        if (stringToChange == sourceString)
-            return false;
-        else
-            return true;
+        else {
+            return undefined;
+        }
     }
 
+    function main() {
+        if (typeof markdownPalettes != "undefined") {
+            let changedStr = replaceString($(".CodeMirror-wrap textarea").val());
+            if (changedStr != undefined) {
+                $(".CodeMirror-wrap textarea").val(changedStr);
+                $(".CodeMirror-wrap textarea").trigger("input");
+            }
+        }
+        if (document.getElementById("feed-content") != null) {
+            let changedStr = replaceString(document.getElementById("feed-content").value);
+            if (changedStr != undefined) {
+                document.getElementById("feed-content").value = changedStr;
+            }
+        }
+    }
 
-    document.addEventListener("keydown", function () {
-        main();
-    })
-    
-    document.addEventListener("click", function () {
+    // It seemed this function didn't work :(
+    // To be fixed
+    // Fixed on 2021.5.30
+
+    document.addEventListener("input", function () {
         main();
     })
 
