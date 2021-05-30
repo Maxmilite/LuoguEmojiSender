@@ -7,7 +7,7 @@
 // @match        https://www.luogu.com.cn/*
 // @match        http://www.luogu.com.cn/*
 // @grant        unsafeWindow
-// @require     https://code.jquery.com/jquery-2.1.1.min.js
+// @require      https://code.jquery.com/jquery-2.1.1.min.js
 // ==/UserScript==
 
 (function () {
@@ -23,7 +23,7 @@
     // 请注意，如果不是最后一行，该行后必须添加逗号。
     // 样例：" "/亲亲": "![](![qq_emoji: qq](https://cdn.jsdelivr.net/gh/4bqwq/LuoguEmojiSender@main/image/qq.gif))", "
     const userElement = {
-        
+
     }
 
     // -------------------------上方为用户修改配置区--------------------------------
@@ -239,7 +239,7 @@
         }
         return resultString;
     }
-    
+
     function sliceString(sourceString = "", leftSide = 0, rightSide = 0) {
         let resultString = ""
         for (let i = leftSide; i <= rightSide; i++) {
