@@ -6,12 +6,16 @@ A TamperMonkey addon which can help you send QQ emoji conveniently.
 
 GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisender](https://greasyfork.org/zh-CN/scripts/426868-luoguemojisender)
 
-该插件对于洛谷犇犇和所有使用 Markdown Palettes 编辑器的编辑区。
+演示视频地址：[https://www.bilibili.com/video/BV11v411G7wX/](https://www.bilibili.com/video/BV11v411G7wX/)
+
+该插件适用于洛谷犇犇和讨论区。
 
 感谢以下贡献者：
     [洛谷: 犇犇犇犇](https://www.luogu.com.cn/user/35998)
 
 # 0. 前言
+
+**已更新完整体最终更新，我已经做到了任何我能想到的需求。**
 
 作者在高二，可能无法及时处理 issue，请见谅。
 
@@ -24,6 +28,10 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 1.2 更新内容：增加了更多的 QQ 图片，更改了图床（感谢 [洛谷: 犇犇犇犇](https://www.luogu.com.cn/user/35998) 的贡献）；优化函数逻辑。
 
 1.3 更新内容：进一步优化操作逻辑，修复了图片加载的一个BUG，现在可以无忧无虑使用无缝模式了。
+
+1.3.1 更新内容：紧急修复一个由菜刀表情引发的严重BUG。
+
+1.4 最终更新 更新内容：修复了 1.3.1 版本更新日志版本号的bug，修复输入问题，修复光标漂移问题，修复无缝衔接问题，修复菜刀表情问题，修复若干问题。
 
 # 1. 使用方法
 
