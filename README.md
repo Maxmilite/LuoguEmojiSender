@@ -39,6 +39,8 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 
 按下按钮可以替换文中所有的表情符号，弥补了某些不足。
 
+1.4.2 增量更新 更新内容：修复一个无缝模式的 bug，添加了部分表情 表情如下：[https://www.luogu.com.cn/paste/dzor650w](https://www.luogu.com.cn/paste/dzor650w)
+
 # 1. 使用方法
 
 ## 0. 安装 Tampermonkey

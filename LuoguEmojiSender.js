@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.4.1
+// @version      1.4.2
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
 // @match        http://www.luogu.com.cn/*
 // @grant        unsafeWindow
 // @require      https://code.jquery.com/jquery-2.1.1.min.js
+// @updateURL    https://raw.fastgit.org/Maxmilite/LuoguEmojiSender/main/LuoguEmojiSender.js
 // ==/UserScript==
 
 (function () {
@@ -30,7 +31,7 @@
 
     // 这是第一代 LuoguEmojiSender 的最终版本，内容已经相当完善，此后作者将会着力于第二代的开发，第一代基本不会更新。
     // 最后更新时间 2021.5.30
-    // 最后版本 1.4.1
+    // 最后版本 1.4.2
     // 第二代目标：实现图形化，近似于 QQ 发送表情
     // 作者在这个版本留下了一个臭了的彩蛋
 
@@ -47,15 +48,39 @@
     // 修复光标漂移问题，修复无缝衔接问题，修复菜刀表情问题，修复若干问题
     // 1.4.1 更新内容：
     // 更换表情源，增加 “替换表情” 按钮，具体详见说明文档。
+    // 1.4.2 更新内容：
+    // 修复一个无缝模式的 bug，添加了部分表情
 
     const replaceElement = {
+        "/ybyb": "![qq_emoji: ybyb](https://z3.ax1x.com/2021/05/30/2VUvAH.png)",
+        "/wosl": "![qq_emoji: wosl](https://z3.ax1x.com/2021/05/30/2VUSyT.png)",
+        "/hs": "![qq_emoji: hs](https://z3.ax1x.com/2021/05/30/2VNzlV.png)",
+        "/psj": "![qq_emoji: psj](https://z3.ax1x.com/2021/05/30/2VNjWq.png)",
+        "/na": "![qq_emoji: na](https://z3.ax1x.com/2021/05/30/2VNqoj.png)",
+        "/bx": "![qq_emoji: bx](https://z3.ax1x.com/2021/05/30/2VNbwQ.png)",
+        "/qdqd": "![qq_emoji: qdqd](https://z3.ax1x.com/2021/05/30/2VNTOS.png)",
+        "/zy": "![qq_emoji: zy](https://z3.ax1x.com/2021/05/30/2VNIQf.png)",
+        "/nqct": "![qq_emoji: nqct](https://z3.ax1x.com/2021/05/30/2VNlR0.png)",
+        "/nzqk": "![qq_emoji: nzqk](https://z3.ax1x.com/2021/05/30/2VNQGq.png)",
+        "/mjl": "![qq_emoji: mjl](https://z3.ax1x.com/2021/05/30/2VNuIs.png)",
+        "/gun": "![qq_emoji: gun](https://z3.ax1x.com/2021/05/30/2VtyUs.png)",
+        "/cb": "![qq_emoji: cb](https://z3.ax1x.com/2021/05/30/2Vtagf.png)",
+        "/my": "![qq_emoji: my](https://z3.ax1x.com/2021/05/30/2VtGEd.png)",
+        "/mwbq": "![qq_emoji: mwbq](https://z3.ax1x.com/2021/05/30/2Vtu36.png)",
+        "/kx": "![qq_emoji: kx](https://z3.ax1x.com/2021/05/30/2VYvAs.png)",
+        "/jl": "![qq_emoji: jl](https://z3.ax1x.com/2021/05/30/2VY5tI.png)",
+        "/wyx": "![qq_emoji: wyx](https://z3.ax1x.com/2021/05/30/2VY8f0.png)",
+        "/ww": "![qq_emoji: ww](https://z3.ax1x.com/2021/05/30/2VYiTA.png)",
+        "/mdfq": "![qq_emoji: mdfq](https://z3.ax1x.com/2021/05/30/2VJQG6.png)",
+        "/banzz": "![qq_emoji: banzz](https://z3.ax1x.com/2021/05/30/2VJMPx.png)",
+        "/mgx": "![qq_emoji: mgx](https://z3.ax1x.com/2021/05/30/2VGyU1.png)",
+        // ----------------- 以上为 1.4.2 更新内容 -----------------
         "/aini": "![qq_emoji: aini](https://xn--9zr.tk/aini)",
         "/aiq": "![qq_emoji: aiq](https://xn--9zr.tk/aiq)",
         "/am": "![qq_emoji: am](https://xn--9zr.tk/am)",
-        "/azgc": "![qq_emoji: azgc](https://xn--9zr.tk/azgc)",
+        "/azgc": "![qq_emoji: azgc](https://z3.ax1x.com/2021/05/30/2VJqoR.png)",
         "/baiy": "![qq_emoji: baiy](https://xn--9zr.tk/baiy)",
         "/bangbangt": "![qq_emoji: bangbangt](https://xn--9zr.tk/bangbangt)",
-        "/banzz": "![qq_emoji: banzz](https://xn--9zr.tk/banzz)",
         "/baojin": "![qq_emoji: baojin](https://xn--9zr.tk/baojin)",
         "/bb": "![qq_emoji: bb](https://xn--9zr.tk/bb)",
         "/bkx": "![qq_emoji: bkx](https://xn--9zr.tk/bkx)",
@@ -69,12 +94,12 @@
         "/bz": "![qq_emoji: bz](https://xn--9zr.tk/bz)",
         "/cd": "![qq_emoji: cd](https://xn--9zr.tk/cd)",
         "/cengyiceng": "![qq_emoji: cengyiceng](https://xn--9zr.tk/cengyiceng)",
-        "/cg": "![qq_emoji: cg](https://xn--9zr.tk/cg)",
+        "/cg": "![qq_emoji: cg](https://z3.ax1x.com/2021/05/30/2VJxSK.png)",
         "/ch": "![qq_emoji: ch](https://xn--9zr.tk/ch)",
         "/chi": "![qq_emoji: chi](https://xn--9zr.tk/chi)",
         "/cj": "![qq_emoji: cj](https://xn--9zr.tk/cj)",
         "/cp": "![qq_emoji: cp](https://xn--9zr.tk/cp)",
-        "/cs": "![qq_emoji: cs](https://xn--9zr.tk/cs)",
+        "/cs": "![qq_emoji: cs](https://z3.ax1x.com/2021/05/30/2VJWiq.png)",
         "/cy": "![qq_emoji: cy](https://xn--9zr.tk/cy)",
         "/dan": "![qq_emoji: dan](https://xn--9zr.tk/dan)",
         "/dao": "![qq_emoji: dao](https://xn--9zr.tk/dao)",
@@ -88,7 +113,7 @@
         "/dy": "![qq_emoji: dy](https://xn--9zr.tk/dy)",
         "/dz": "![qq_emoji: dz](https://xn--9zr.tk/dz)",
         "/ee": "![qq_emoji: ee](https://xn--9zr.tk/ee)",
-        "/emm": "![qq_emoji: emm](https://xn--9zr.tk/emm)",
+        "/emm": "![qq_emoji: emm](https://z3.ax1x.com/2021/05/30/2VJjW6.png)",
         "/fad": "![qq_emoji: fad](https://xn--9zr.tk/fad)",
         "/fade": "![qq_emoji: fade](https://xn--9zr.tk/fade)",
         "/fan": "![qq_emoji: fan](https://xn--9zr.tk/fan)",
@@ -106,7 +131,7 @@
         "/hc": "![qq_emoji: hc](https://xn--9zr.tk/hc)",
         "/hd": "![qq_emoji: hd](https://xn--9zr.tk/hd)",
         "/hec": "![qq_emoji: hec](https://xn--9zr.tk/hec)",
-        "/hhd": "![qq_emoji: hhd](https://xn--9zr.tk/hhd)",
+        "/hhd": "![qq_emoji: hhd](https://z3.ax1x.com/2021/05/30/2VYpOe.png)",
         "/hn": "![qq_emoji: hn](https://xn--9zr.tk/hn)",
         "/hp": "![qq_emoji: hp](https://xn--9zr.tk/hp)",
         "/hq": "![qq_emoji: hq](https://xn--9zr.tk/hq)",
@@ -141,14 +166,13 @@
         "/lm": "![qq_emoji: lm](https://xn--9zr.tk/lm)",
         "/lq": "![qq_emoji: lq](https://xn--9zr.tk/lq)",
         "/lw": "![qq_emoji: lw](https://xn--9zr.tk/lw)",
-        "/lyj": "![qq_emoji: lyj](https://xn--9zr.tk/lyj)",
-        "/mdfq": "![qq_emoji: mdfq](https://xn--9zr.tk/mdfq)",
-        "/mg": "![qq_emoji: mg](https://xn--9zr.tk/mg)",
+        "/lyj": "![qq_emoji: lyj](https://z3.ax1x.com/2021/05/30/2VJhWV.png)",
+        "/meigui": "![qq_emoji: meigui](https://xn--9zr.tk/mg)",
         "/mm": "![qq_emoji: mm](https://xn--9zr.tk/mm)",
         "/ng": "![qq_emoji: ng](https://xn--9zr.tk/ng)",
-        "/nkt": "![qq_emoji: nkt](https://xn--9zr.tk/nkt)",
+        "/nkt": "![qq_emoji: nkt](https://z3.ax1x.com/2021/05/30/2VJrQS.png)",
         "/oh": "![qq_emoji: oh](https://xn--9zr.tk/oh)",
-        "/oy": "![qq_emoji: oy](https://xn--9zr.tk/oy)",
+        "/oy": "![qq_emoji: oy](https://z3.ax1x.com/2021/05/30/2VJ4zT.png)",
         "/pch": "![qq_emoji: pch](https://xn--9zr.tk/pch)",
         "/pj": "![qq_emoji: pj](https://xn--9zr.tk/pj)",
         "/pp": "![qq_emoji: pp](https://xn--9zr.tk/pp)",
@@ -175,19 +199,18 @@
         "/tp": "![qq_emoji: tp](https://xn--9zr.tk/tp)",
         "/ts": "![qq_emoji: ts](https://xn--9zr.tk/ts)",
         "/tsh": "![qq_emoji: tsh](https://xn--9zr.tk/tsh)",
-        "/tt": "![qq_emoji: tt](https://xn--9zr.tk/tt)",
+        "/tt": "![qq_emoji: tt](https://z3.ax1x.com/2021/05/30/2VJIQU.png)",
         "/tuu": "![qq_emoji: tuu](https://xn--9zr.tk/tuu)",
         "/tx": "![qq_emoji: tx](https://xn--9zr.tk/tx)",
-        "/ty": "![qq_emoji: ty](https://xn--9zr.tk/ty)",
+        "/taiyang": "![qq_emoji: ty](https://xn--9zr.tk/ty)",
         "/tyt": "![qq_emoji: tyt](https://xn--9zr.tk/tyt)",
         "/wbk": "![qq_emoji: wbk](https://xn--9zr.tk/wbk)",
-        "/whl": "![qq_emoji: whl](https://xn--9zr.tk/whl)",
+        "/whl": "![qq_emoji: whl](https://z3.ax1x.com/2021/05/30/2VJHeJ.png)",
         "/wl": "![qq_emoji: wl](https://xn--9zr.tk/wl)",
         "/wn": "![qq_emoji: wn](https://xn--9zr.tk/wn)",
-        "/wosl": "![qq_emoji: wosl](https://xn--9zr.tk/wosl)",
         "/wq": "![qq_emoji: wq](https://xn--9zr.tk/wq)",
         "/ws": "![qq_emoji: ws](https://xn--9zr.tk/ws)",
-        "/wul": "![qq_emoji: wul](https://xn--9zr.tk/wul)",
+        "/wul": "![qq_emoji: wul](https://z3.ax1x.com/2021/05/30/2VJfJ0.png)",
         "/wx": "![qq_emoji: wx](https://xn--9zr.tk/wx)",
         "/wzm": "![qq_emoji: wzm](https://xn--9zr.tk/wzm)",
         "/xhx": "![qq_emoji: xhx](https://xn--9zr.tk/xhx)",
@@ -228,7 +251,7 @@
 
     function getSubString(sourceString = "", findPos = -1) {
         if (findPos == -1) {
-            return "9zr.tk";
+            return "zr.tk";
         }
         if (findPos <= 5) {
             return "";
@@ -255,7 +278,8 @@
         let isChanged = false;
         for (let i in replaceElement) {
             let changedStr = prefix + i + suffix;
-            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "9zr.tk") {
+            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk") {
+                console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, replaceElement[i]);
                 stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + replaceElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
@@ -263,7 +287,7 @@
         }
         for (let i in userElement) {
             let changedStr = prefix + i + suffix;
-            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "9zr.tk") {
+            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk") {
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, userElement[i]);
                 stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + userElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
@@ -308,7 +332,7 @@
                     😀
                 </a>
             </li>`).appendTo($(".mp-editor-menu"));
-        $("#replaceEmoji").on("click", function() {
+        $("#replaceEmoji").on("click", function () {
             replaceAll();
         });
     }
