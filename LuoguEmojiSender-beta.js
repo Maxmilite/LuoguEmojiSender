@@ -51,6 +51,9 @@
     // 1.4.2 更新内容：
     // 修复一个无缝模式的 bug，添加了部分表情
 
+
+    var functionIsOn = true;
+
     const replaceElement = {
         "/ybyb": "![qq_emoji: ybyb](https://z3.ax1x.com/2021/05/30/2VUvAH.png)",
         "/wosl": "![qq_emoji: wosl](https://z3.ax1x.com/2021/05/30/2VUSyT.png)",
@@ -302,6 +305,9 @@
     }
 
     function main() {
+        if (functionIsOn == false) {
+            return;
+        }
         if (typeof markdownPalettes != "undefined") {
             let changedStr = replaceString($(".CodeMirror-wrap textarea").val());
             if (changedStr != undefined) {
@@ -335,6 +341,17 @@
         $("#replaceEmoji").on("click", function () {
             replaceAll();
         });
+        addOnButton();
+    }
+
+    function addOnButton() {
+
+        $(`<li data-v-6d5597b1 id="buttonOff">
+                <a data-v-6d5597b1="" title="关闭自动替换" unselectable="on">
+                    开
+                </a>
+            </li>`).appendTo($(".mp-editor-menu"));
+        functionIsOn = true;
     }
 
     // It seemed this function didn't work :(
