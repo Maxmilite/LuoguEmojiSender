@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.4.2
+// @version      1.4.3
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -47,9 +47,14 @@
     // 修复了 1.3.1 版本更新日志版本号的bug，修复输入问题，第一代最终版本
     // 修复光标漂移问题，修复无缝衔接问题，修复菜刀表情问题，修复若干问题
     // 1.4.1 更新内容：
-    // 更换表情源，增加 “替换表情” 按钮，具体详见说明文档。
+    // 更换表情源，增加 “替换表情” 按钮，具体详见说明文档
     // 1.4.2 更新内容：
     // 修复一个无缝模式的 bug，添加了部分表情
+    // 1.4.3 更新内容：
+    // 增加了一个开关自动替换按钮，现在您可以自行决定是否自动替换文中内容了，修复了一个bug，更新了雀魂表情库
+
+
+    var functionIsOn = true;
 
     const replaceElement = {
         "/ybyb": "![qq_emoji: ybyb](https://z3.ax1x.com/2021/05/30/2VUvAH.png)",
@@ -92,7 +97,7 @@
         "/bt": "![qq_emoji: bt](https://xn--9zr.tk/bt)",
         "/bu": "![qq_emoji: bu](https://xn--9zr.tk/bu)",
         "/bz": "![qq_emoji: bz](https://xn--9zr.tk/bz)",
-        "/cd": "![qq_emoji: cd](https://xn--9zr.tk/cd)",
+        // "/cd": "![qq_emoji: cd](https://xn--9zr.tk/cd)",
         "/cengyiceng": "![qq_emoji: cengyiceng](https://xn--9zr.tk/cengyiceng)",
         "/cg": "![qq_emoji: cg](https://z3.ax1x.com/2021/05/30/2VJxSK.png)",
         "/ch": "![qq_emoji: ch](https://xn--9zr.tk/ch)",
@@ -244,10 +249,138 @@
         "/zq": "![qq_emoji: zq](https://xn--9zr.tk/zq)",
         "/zt": "![qq_emoji: zt](https://xn--9zr.tk/zt)",
         "/zuotj": "![qq_emoji: zuotj](https://xn--9zr.tk/zuotj)",
-        "/114514": "[![为什么您会找到一个在 QQ 表情里没有的东西](https://z3.ax1x.com/2021/05/30/2Eook9.png)](https://github.com/Maxmilite/LuoguEmojiSender)"
+        "/114514": "[![为什么您会找到一个在 QQ 表情里没有的东西](https://z3.ax1x.com/2021/05/30/2Eook9.png)](https://github.com/Maxmilite/LuoguEmojiSender)",
+        "/maj-1!": "![majsoul: 1](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-1.png)",
+        "/maj-2!": "![majsoul: 2](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-2.png)",
+        "/maj-3!": "![majsoul: 3](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-3.png)",
+        "/maj-4!": "![majsoul: 4](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-4.png)",
+        "/maj-5!": "![majsoul: 5](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-5.png)",
+        "/maj-6!": "![majsoul: 6](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-6.png)",
+        "/maj-7!": "![majsoul: 7](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-7.png)",
+        "/maj-8!": "![majsoul: 8](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-8.png)",
+        "/maj-9!": "![majsoul: 9](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-9.png)",
+        "/maj-10!": "![majsoul: 10](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-10.png)",
+        "/maj-11!": "![majsoul: 11](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-11.png)",
+        "/maj-12!": "![majsoul: 12](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-12.png)",
+        "/maj-13!": "![majsoul: 13](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-13.png)",
+        "/maj-14!": "![majsoul: 14](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-14.png)",
+        "/maj-15!": "![majsoul: 15](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-15.png)",
+        "/maj-16!": "![majsoul: 16](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-16.png)",
+        "/maj-17!": "![majsoul: 17](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-17.png)",
+        "/maj-18!": "![majsoul: 18](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-18.png)",
+        "/maj-19!": "![majsoul: 19](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-19.png)",
+        "/maj-20!": "![majsoul: 20](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-20.png)",
+        "/maj-21!": "![majsoul: 21](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-21.png)",
+        "/maj-22!": "![majsoul: 22](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-22.png)",
+        "/maj-23!": "![majsoul: 23](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-23.png)",
+        "/maj-24!": "![majsoul: 24](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-24.png)",
+        "/maj-25!": "![majsoul: 25](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-25.png)",
+        "/maj-26!": "![majsoul: 26](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-26.png)",
+        "/maj-27!": "![majsoul: 27](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-27.png)",
+        "/maj-28!": "![majsoul: 28](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-28.png)",
+        "/maj-29!": "![majsoul: 29](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-29.png)",
+        "/maj-30!": "![majsoul: 30](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-30.png)",
+        "/maj-31!": "![majsoul: 31](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-31.png)",
+        "/maj-32!": "![majsoul: 32](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-32.png)",
+        "/maj-33!": "![majsoul: 33](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-33.png)",
+        "/maj-34!": "![majsoul: 34](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-34.png)",
+        "/maj-35!": "![majsoul: 35](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-35.png)",
+        "/maj-36!": "![majsoul: 36](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-36.png)",
+        "/maj-37!": "![majsoul: 37](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-37.png)",
+        "/maj-38!": "![majsoul: 38](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-38.png)",
+        "/maj-39!": "![majsoul: 39](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-39.png)",
+        "/maj-40!": "![majsoul: 40](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-40.png)",
+        "/maj-41!": "![majsoul: 41](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-41.png)",
+        "/maj-42!": "![majsoul: 42](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-42.png)",
+        "/maj-43!": "![majsoul: 43](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-43.png)",
+        "/maj-44!": "![majsoul: 44](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-44.png)",
+        "/maj-45!": "![majsoul: 45](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-45.png)",
+        "/maj-46!": "![majsoul: 46](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-46.png)",
+        "/maj-47!": "![majsoul: 47](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-47.png)",
+        "/maj-48!": "![majsoul: 48](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-48.png)",
+        "/maj-49!": "![majsoul: 49](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-49.png)",
+        "/maj-50!": "![majsoul: 50](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-50.png)",
+        "/maj-51!": "![majsoul: 51](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-51.png)",
+        "/maj-52!": "![majsoul: 52](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-52.png)",
+        "/maj-53!": "![majsoul: 53](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-53.png)",
+        "/maj-54!": "![majsoul: 54](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-54.png)",
+        "/maj-55!": "![majsoul: 55](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-55.png)",
+        "/maj-56!": "![majsoul: 56](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-56.png)",
+        "/maj-57!": "![majsoul: 57](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-57.png)",
+        "/maj-58!": "![majsoul: 58](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-58.png)",
+        "/maj-59!": "![majsoul: 59](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-59.png)",
+        "/maj-60!": "![majsoul: 60](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-60.png)",
+        "/maj-61!": "![majsoul: 61](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-61.png)",
+        "/maj-62!": "![majsoul: 62](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-62.png)",
+        "/maj-63!": "![majsoul: 63](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-63.png)",
+        "/maj-64!": "![majsoul: 64](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-64.png)",
+        "/maj-65!": "![majsoul: 65](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-65.png)",
+        "/maj-66!": "![majsoul: 66](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-66.png)",
+        "/maj-67!": "![majsoul: 67](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-67.png)",
+        "/maj-68!": "![majsoul: 68](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-68.png)",
+        "/maj-69!": "![majsoul: 69](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-69.png)",
+        "/maj-70!": "![majsoul: 70](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-70.png)",
+        "/maj-71!": "![majsoul: 71](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-71.png)",
+        "/maj-72!": "![majsoul: 72](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-72.png)",
+        "/maj-73!": "![majsoul: 73](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-73.png)",
+        "/maj-74!": "![majsoul: 74](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-74.png)",
+        "/maj-75!": "![majsoul: 75](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-75.png)",
+        "/maj-76!": "![majsoul: 76](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-76.png)",
+        "/maj-77!": "![majsoul: 77](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-77.png)",
+        "/maj-78!": "![majsoul: 78](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-78.png)",
+        "/maj-79!": "![majsoul: 79](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-79.png)",
+        "/maj-80!": "![majsoul: 80](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-80.png)",
+        "/maj-81!": "![majsoul: 81](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-81.png)",
+        "/maj-82!": "![majsoul: 82](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-82.png)",
+        "/maj-83!": "![majsoul: 83](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-83.png)",
+        "/maj-84!": "![majsoul: 84](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-84.png)",
+        "/maj-85!": "![majsoul: 85](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-85.png)",
+        "/maj-86!": "![majsoul: 86](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-86.png)",
+        "/maj-87!": "![majsoul: 87](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-87.png)",
+        "/maj-88!": "![majsoul: 88](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-88.png)",
+        "/maj-89!": "![majsoul: 89](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-89.png)",
+        "/maj-90!": "![majsoul: 90](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-90.png)",
+        "/maj-91!": "![majsoul: 91](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-91.png)",
+        "/maj-92!": "![majsoul: 92](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-92.png)",
+        "/maj-93!": "![majsoul: 93](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-93.png)",
+        "/maj-94!": "![majsoul: 94](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-94.png)",
+        "/maj-95!": "![majsoul: 95](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-95.png)",
+        "/maj-96!": "![majsoul: 96](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-96.png)",
+        "/maj-97!": "![majsoul: 97](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-97.png)",
+        "/maj-98!": "![majsoul: 98](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/maj-98.png)"
     };
 
     const $ = unsafeWindow.$ || jQuery, markdownPalettes = unsafeWindow.markdownPalettes;
+
+    function ShowTip(tip, type) {
+        var $tip = $('#tip');
+        if ($tip.length == 0) {
+            $tip = $('<span id="tip" style="position:fixed; top:50px; left: 50%; z-index:9999; height: 35px; padding: 0 20px; line-height: 35px; background-color: white; border: 5px; opacity: 75%"></span>');
+            $('body').append($tip);
+        }
+        $tip.stop(true).prop('class', 'alert alert-' + type).text(tip).css('margin-left', -$tip.outerWidth() / 2).fadeIn(250).delay(500).fadeOut(250);
+    }
+
+    function ShowMsg(msg) {
+        ShowTip(msg, 'info');
+    }
+
+    function ShowSuccess(msg) {
+        ShowTip(msg, 'success');
+    }
+
+    function ShowFailure(msg) {
+        ShowTip(msg, 'danger');
+    }
+
+    function ShowWarn(msg, $focus, clear) {
+        ShowTip(msg, 'warning');
+        if ($focus) {
+            $focus.focus();
+            if (clear) $focus.val('');
+        }
+        return false;
+    }
 
     function getSubString(sourceString = "", findPos = -1) {
         if (findPos == -1) {
@@ -278,7 +411,7 @@
         let isChanged = false;
         for (let i in replaceElement) {
             let changedStr = prefix + i + suffix;
-            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk") {
+            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk" && getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "jsoul") {
                 console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, replaceElement[i]);
@@ -287,7 +420,7 @@
         }
         for (let i in userElement) {
             let changedStr = prefix + i + suffix;
-            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk") {
+            while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk" && getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "jsoul") {
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, userElement[i]);
                 stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + userElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
@@ -302,6 +435,9 @@
     }
 
     function main() {
+        if (functionIsOn == false) {
+            return;
+        }
         if (typeof markdownPalettes != "undefined") {
             let changedStr = replaceString($(".CodeMirror-wrap textarea").val());
             if (changedStr != undefined) {
@@ -320,6 +456,8 @@
     function replaceAll() {
         if (replaceString(markdownPalettes.content) != undefined) {
             markdownPalettes.content = replaceString(markdownPalettes.content);
+            ShowSuccess("文中所有表情已手动替换");
+            return;
         }
         else {
             return;
@@ -328,13 +466,49 @@
 
     function init() {
         $(`<li data-v-6d5597b1 id="replaceEmoji">
-                <a data-v-6d5597b1="" title="替换表情" unselectable="on">
-                    😀
+                <a data-v-6d5597b1="" title="手动替换表情" unselectable="on">
+                    <img style="margin: 2px 0; padding: 0; inline-size: 22px; align-items: center; justify-content: center" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/grinning-face-with-sweat_1f605.png">
                 </a>
             </li>`).appendTo($(".mp-editor-menu"));
         $("#replaceEmoji").on("click", function () {
             replaceAll();
         });
+        addOnButton();
+        if (markdownPalettes != undefined || document.getElementById("feed-content") != null) {
+            ShowSuccess("自动发表情插件已加载完毕");
+        }
+    }
+
+    function addOffButton() {
+        if (document.getElementById("buttonOff") != null) {
+            document.getElementById("buttonOff").remove();
+            ShowSuccess("自动替换表情功能已关闭");
+        }
+        $(`<li data-v-6d5597b1 id="buttonOn">
+                <a data-v-6d5597b1="" title="开启自动替换" unselectable="on">
+                    关
+                </ a>
+            </li>`).appendTo($(".mp-editor-menu"));
+        $("#buttonOn").on("click", function () {
+            addOnButton();
+        });
+        functionIsOn = false;
+    }
+
+    function addOnButton() {
+        if (document.getElementById("buttonOn") != null) {
+            document.getElementById("buttonOn").remove();
+            ShowSuccess("自动替换表情功能已开启");
+        }
+        $(`<li data-v-6d5597b1 id="buttonOff">
+                <a data-v-6d5597b1="" title="关闭自动替换" unselectable="on">
+                    开
+                </a>
+            </li>`).appendTo($(".mp-editor-menu"));
+        $("#buttonOff").on("click", function () {
+            addOffButton();
+        });
+        functionIsOn = true;
     }
 
     // It seemed this function didn't work :(

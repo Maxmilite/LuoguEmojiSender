@@ -12,6 +12,7 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 
 感谢以下贡献者：
     [洛谷: 犇犇犇犇](https://www.luogu.com.cn/user/35998)
+    [洛谷: yihra1207](https://www.luogu.com.cn/discuss/show/208902)
 
 # 0. 前言
 
@@ -40,6 +41,18 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 按下按钮可以替换文中所有的表情符号，弥补了某些不足。
 
 1.4.2 增量更新 更新内容：修复一个无缝模式的 bug，添加了部分表情 表情如下：[https://www.luogu.com.cn/paste/dzor650w](https://www.luogu.com.cn/paste/dzor650w)
+
+1.4.3 增量更新 更新内容：添加雀魂表情，表情如下：
+
+![](https://cdn.jsdelivr.net/gh/BoringHacker/cdn/emojis/majsoul/table.png)
+
+您可以输入 `{/maj-*!}` 来输入雀魂表情。
+
+增加了一个开关自动替换按钮，现在您可以自行决定是否自动替换文中内容了。
+
+![](https://z3.ax1x.com/2021/06/09/2ye7OP.png)
+
+修复了部分浏览器显示不正常的一个bug。
 
 # 1. 使用方法
 
