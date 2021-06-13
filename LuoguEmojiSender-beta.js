@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.4.3
+// @version      1.4.4
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -17,13 +17,13 @@
     // 此项定义前后缀功能，用于表情的识别，以默认配置为例
     // 如果在此配置下，当且仅当输入的内容为大括号包裹的qq表情代码（即 "{/代码}"）时才会进行替换操作。
     // 当然，您可以直接将其设置为空字符串，来达到无缝衔接的效果。
-    const prefix = "{", suffix = "}";
+    var prefix = "{", suffix = "}";
 
     // 此处为用户个性化设置区，输入格式按照 JSON 格式输入。
     // 格式：" "表情代码": "![...](...)", "
     // 请注意，如果不是最后一行，该行后必须添加逗号。
     // 样例：" "/亲亲": "![](![qq_emoji: qq](https://xn--9zr.tk/qq))", "
-    const userElement = {
+    var userElement = {
 
     }
 
@@ -52,7 +52,6 @@
     // 修复一个无缝模式的 bug，添加了部分表情
     // 1.4.3 更新内容：
     // 增加了一个开关自动替换按钮，现在您可以自行决定是否自动替换文中内容了，修复了一个bug，更新了雀魂表情库
-
 
     var functionIsOn = true;
 
@@ -464,7 +463,35 @@
         }
     }
 
+    function writeConfig() {
+        lsSet("LuoguEmojiSenderPrefix", prefix);
+        lsSet("LuoguEmojiSenderSuffix", suffix);
+        lsSet("LuoguEmojiSenderIsOn", functionIsOn);
+    }
+
+    function readConfig() {
+        prefix = lsGet("LuoguEmojiSenderPrefix", prefix);
+        suffix = lsGet("LuoguEmojiSenderSuffix", suffix);
+        functionIsOn = lsGet("LuoguEmojiSenderIsOn", functionIsOn);
+    }
+
+    function lsGet(x = "") {
+        return unsafeWindow.localStorage.getItem(x);
+    }
+
+    function lsSet(x = "", content = "") {
+        unsafeWindow.localStorage.setItem(x, content);
+    }
+
+    var setting = new Object;
+
+    setting.openSetting = function() {
+        let div = document.createElement("div");
+        
+    }
+
     function init() {
+
         $(`<li data-v-6d5597b1 id="replaceEmoji">
                 <a data-v-6d5597b1="" title="手动替换表情" unselectable="on">
                     <img style="margin: 2px 0; padding: 0; inline-size: 22px; align-items: center; justify-content: center" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/grinning-face-with-sweat_1f605.png">
@@ -473,7 +500,36 @@
         $("#replaceEmoji").on("click", function () {
             replaceAll();
         });
-        addOnButton();
+
+        if (localStorage.getItem("LuoguEmojiSender") == null) {
+            localStorage.setItem("LuoguEmojiSender", "哇这里竟然有彩蛋");
+            writeConfig();
+            ShowSuccess("自动发表情插件初始化完毕");
+        }
+        else {
+            readConfig();
+        }
+
+        if (functionIsOn == true) {
+            addOnButton();
+        }
+        else {
+            addOffButton();
+        }
+
+        document.addEventListener("input", function () {
+            main();
+        })
+
+        $(` <p>
+                <strong>插件设置</strong><br>
+                <a id="LuoguEmojiSenderSetting" target="_blank">LuoguEmojiSender 设置</a>
+                <br>
+            </p>`).appendTo($(".am-hide-sm"));
+        $("#LuoguEmojiSenderSetting").on("click", function () {
+            setting.openSetting();
+        });
+
         if (markdownPalettes != undefined || document.getElementById("feed-content") != null) {
             ShowSuccess("自动发表情插件已加载完毕");
         }
@@ -493,6 +549,7 @@
             addOnButton();
         });
         functionIsOn = false;
+        writeConfig();
     }
 
     function addOnButton() {
@@ -509,15 +566,13 @@
             addOffButton();
         });
         functionIsOn = true;
+        writeConfig();
     }
 
     // It seemed this function didn't work :(
     // To be fixed
     // Fixed on 2021.5.30
 
-    document.addEventListener("input", function () {
-        main();
-    })
     init();
 
 })();
