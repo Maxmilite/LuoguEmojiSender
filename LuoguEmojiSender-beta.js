@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         LuoguEmojiSender
+// @name         LuoguEmojiSender Beta
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.4.4
+// @version      1.4.5
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -551,7 +551,8 @@
         }
 
         document.addEventListener("input", function () {
-            main();
+            // main();
+            debug();
         })
 
         if (document.getElementById("feed-content") != null) {
@@ -694,6 +695,9 @@
     // It seemed this function didn't work :(
     // To be fixed
     // Fixed on 2021.5.30
+
+    function debug() {
+    }
 
     init();
 
