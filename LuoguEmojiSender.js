@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LuoguEmojiSender
 // @namespace    https://github.com/Maxmilite/LuoguEmojiSender
-// @version      1.4.3
+// @version      1.4.4
 // @description  一款可以帮助您在洛谷轻松发送 QQ 表情信息的插件.
 // @author       Maxmilite
 // @match        https://www.luogu.com.cn/*
@@ -12,26 +12,9 @@
 // ==/UserScript==
 
 (function () {
-    // -------------------------此处为用户修改配置区--------------------------------
-
-    // 此项定义前后缀功能，用于表情的识别，以默认配置为例
-    // 如果在此配置下，当且仅当输入的内容为大括号包裹的qq表情代码（即 "{/代码}"）时才会进行替换操作。
-    // 当然，您可以直接将其设置为空字符串，来达到无缝衔接的效果。
-    const prefix = "{", suffix = "}";
-
-    // 此处为用户个性化设置区，输入格式按照 JSON 格式输入。
-    // 格式：" "表情代码": "![...](...)", "
-    // 请注意，如果不是最后一行，该行后必须添加逗号。
-    // 样例：" "/亲亲": "![](![qq_emoji: qq](https://xn--9zr.tk/qq))", "
-    const userElement = {
-
-    }
-
-    // -------------------------上方为用户修改配置区--------------------------------
-
     // 这是第一代 LuoguEmojiSender 的最终版本，内容已经相当完善，此后作者将会着力于第二代的开发，第一代基本不会更新。
-    // 最后更新时间 2021.5.30
-    // 最后版本 1.4.2
+    // 最后更新时间 2021.6.14
+    // 最后版本 1.4.4
     // 第二代目标：实现图形化，近似于 QQ 发送表情
     // 作者在这个版本留下了一个臭了的彩蛋
 
@@ -52,9 +35,19 @@
     // 修复一个无缝模式的 bug，添加了部分表情
     // 1.4.3 更新内容：
     // 增加了一个开关自动替换按钮，现在您可以自行决定是否自动替换文中内容了，修复了一个bug，更新了雀魂表情库
+    // 1.4.4 更新内容：
+    // 增加设置菜单，现在允许对插件进行有关设置了，所有设置将会保存在本地，不会因为版本更新而丢失；增加快速查询表情按钮
 
+    var functionIsOn = true, seamlessMode = false, queryIsOn = true;
 
-    var functionIsOn = true;
+    var prefix = "{", suffix = "}";
+
+    var userElement = {
+        "样例1": "XXX1.com",
+        "样例2": "XXX2.com",
+        "样例3": "XXX3.com",
+        "样例4": "XXX4.com"
+    };
 
     const replaceElement = {
         "/ybyb": "![qq_emoji: ybyb](https://z3.ax1x.com/2021/05/30/2VUvAH.png)",
@@ -151,8 +144,8 @@
         "/jie": "![qq_emoji: jie](https://xn--9zr.tk/jie)",
         "/jk": "![qq_emoji: jk](https://xn--9zr.tk/jk)",
         "/jw": "![qq_emoji: jw](https://xn--9zr.tk/jw)",
-        "/jx": "![qq_emoji: jy](https://xn--9zr.tk/jx)",
-        "/jy": "![qq_emoji: jx](https://xn--9zr.tk/jy)",
+        "/jx": "![qq_emoji: jx](https://xn--9zr.tk/jx)",
+        "/jy": "![qq_emoji: jy](https://xn--9zr.tk/jy)",
         "/ka": "![qq_emoji: ka](https://xn--9zr.tk/ka)",
         "/kb": "![qq_emoji: kb](https://xn--9zr.tk/kb)",
         "/kel": "![qq_emoji: kel](https://xn--9zr.tk/kel)",
@@ -412,7 +405,7 @@
         for (let i in replaceElement) {
             let changedStr = prefix + i + suffix;
             while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk" && getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "jsoul") {
-                console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
+                // console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, replaceElement[i]);
                 stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + replaceElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
@@ -464,7 +457,74 @@
         }
     }
 
+    function writeConfig() {
+        lsSet("LuoguEmojiSenderPrefix", prefix);
+        lsSet("LuoguEmojiSenderSuffix", suffix);
+        lsSet("LuoguEmojiSenderIsOn", JSON.stringify(functionIsOn));
+        lsSet("LuoguEmojiSenderIsSeamless", JSON.stringify(seamlessMode));
+        lsSet("LuoguEmojiSenderQueryIsOn", JSON.stringify(queryIsOn));
+        lsSet("LuoguEmojiSenderUserElements", JSON.stringify(userElement, null, 4));
+    }
+
+    function readConfig() {
+        prefix = lsGet("LuoguEmojiSenderPrefix");
+        suffix = lsGet("LuoguEmojiSenderSuffix");
+        functionIsOn = JSON.parse(lsGet("LuoguEmojiSenderIsOn"));
+        seamlessMode = JSON.parse(lsGet("LuoguEmojiSenderIsSeamless"));
+        queryIsOn = JSON.parse(lsGet("LuoguEmojiSenderQueryIsOn"));
+        if (seamlessMode == true) {
+            prefix = "", suffix = "";
+        }
+        userElement = JSON.parse(lsGet("LuoguEmojiSenderUserElements"));
+    }
+
+    function lsGet(x = "") {
+        return unsafeWindow.localStorage.getItem(x);
+    }
+
+    function lsSet(x = "", content = "") {
+        unsafeWindow.localStorage.setItem(x, content);
+    }
+
+    var setting = new Object;
+
+    setting.openSetting = function () {
+        $("#lesSettingDiv").slideToggle();
+        if (seamlessMode == true) {
+            document.getElementsByName("seamless")[0].click();
+        }
+        else {
+            document.getElementsByName("seamless")[1].click();
+        }
+        if (queryIsOn == true) {
+            document.getElementsByName("query")[0].click();
+        }
+        else {
+            document.getElementsByName("query")[1].click();
+        }
+    }
+
+    setting.cancelSetting = function () {
+        if (confirm("当前设置未保存，确认取消？") == true) {
+            location.reload();
+        }
+    }
+
+    setting.saveSetting = function () {
+        if (confirm("确认保存当前设置？") == true) {
+            seamlessMode = $("[name='seamless']")[0].checked;
+            userElement = JSON.parse($("#userElementBox")[0].value);
+            prefix = $("[name='prefix']")[0].value;
+            suffix = $("[name='suffix']")[0].value;
+            queryIsOn = $("[name='query']")[0].checked;
+            writeConfig();
+            alert("保存成功");
+            location.reload();
+        }
+    }
+
     function init() {
+
         $(`<li data-v-6d5597b1 id="replaceEmoji">
                 <a data-v-6d5597b1="" title="手动替换表情" unselectable="on">
                     <img style="margin: 2px 0; padding: 0; inline-size: 22px; align-items: center; justify-content: center" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/grinning-face-with-sweat_1f605.png">
@@ -473,7 +533,125 @@
         $("#replaceEmoji").on("click", function () {
             replaceAll();
         });
-        addOnButton();
+
+        if (localStorage.getItem("LuoguEmojiSender") == null) {
+            localStorage.setItem("LuoguEmojiSender", "哇这里竟然有彩蛋");
+            writeConfig();
+            ShowSuccess("自动发表情插件初始化完毕");
+        }
+        else {
+            readConfig();
+        }
+
+        if (functionIsOn == true) {
+            addOnButton();
+        }
+        else {
+            addOffButton();
+        }
+
+        document.addEventListener("input", function () {
+            main();
+        })
+
+        if (document.getElementById("feed-content") != null) {
+            $(` <p>
+                <strong>插件设置</strong><br>
+                <a id="LuoguEmojiSenderSetting" target="_blank">LuoguEmojiSender 设置</a>
+                <br>
+            </p>`).appendTo($(".am-hide-sm"));
+            $("#LuoguEmojiSenderSetting").on("click", function () {
+                setting.openSetting();
+            });
+            $(` 
+            <div id="lesSettingDiv" style="display: none">
+            <p style="text-align: center; font-weight: bold">LuoguEmojiSender 设置</p>
+            <hr>
+            <form name="lesSetting">
+                <strong>
+                    无缝模式：
+                </strong>
+                <input type="radio" name="seamless" value="enabled" >启用</input>
+                <input type="radio" name="seamless" value="disabled" >禁用</input>
+                <br>
+                自定义前缀: <input type="text" name="prefix" style="width: 100px; text-align: center">
+                <br>
+                自定义后缀: <input type="text" name="suffix" style="width: 100px; text-align: center">
+                <br>
+                <strong>
+                    查表情按钮：
+                </strong>
+                <input type="radio" name="query" value="enabled" >启用</input>
+                <input type="radio" name="query" value="disabled" >禁用</input>
+                <br>
+                用户定义表情：<br>
+                <textarea style="height: 200px; font-size: 12px; width: 218.59px; padding: 10px" id="userElementBox"></textarea>
+                <p style="text-align: center; color: red; user-select:none;" id=resetPlugin>点击重置 LuoguEmojiSender</p>
+            </form>
+            <br>
+            <button id="saveSetting" onclick="setting.saveSetting()" style="color: white; background-color: #dd514c; border: none; width: 80px; height: 32px; font-size: 16px; float: left;">
+                保存
+            </button>
+            <button id="cancelSetting" onclick="setting.cancelSetting()" style="color: white; background-color: #dd514c; border: none; width: 80px; height: 32px; font-size: 16px; float: right;">
+                取消
+            </button>
+            <br>
+        </div>
+            `).appendTo($(".am-hide-sm"));
+            $("#saveSetting").on("click", function () {
+                setting.saveSetting();
+            });
+            $("#cancelSetting").on("click", function () {
+                setting.cancelSetting();
+            });
+            $("#resetPlugin").on("click", function () {
+                if (prompt("您确定要重置 LuoguEmojiSender 设置吗？如果确定，请在下面的输入框里输入 “确定” 两个汉字：") == "确定") {
+                    localStorage.removeItem("LuoguEmojiSender");
+                    alert("重置完成")
+                    location.reload();
+                }
+            });
+            $("#userElementBox")[0].value = JSON.stringify(userElement, null, 4);
+            $("[name='seamless']").on("click", function () {
+                if ($("[name='seamless']")[1].checked == true) {
+                    $("[name='prefix']")[0].disabled = false;
+                    $("[name='suffix']")[0].disabled = false;
+                    $("[name='prefix']")[0].value = prefix;
+                    $("[name='suffix']")[0].value = suffix;
+                }
+                else {
+                    $("[name='prefix']")[0].disabled = true;
+                    $("[name='suffix']")[0].disabled = true;
+                    $("[name='prefix']")[0].value = "";
+                    $("[name='suffix']")[0].value = "";
+                }
+            });
+        }
+
+        if ((markdownPalettes != undefined || document.getElementById("feed-content") != null) && queryIsOn == true) {
+            $(`
+                <div id="queryButton" style="margin: 0; padding: 0; position: fixed; width: 100px; height: 32px; right: 0px; bottom: 50vh; color: black; background: white; opacity: 80%;">
+                <a href="https://maxmilite.gitee.io/archive/emoji-library.html" target="_blank"><p style="text-align: center; padding: 4px 0; margin: 0; font-size: 16px; user-select:none; color: black">查看表情</p></a>
+                </div>
+                <div id="switchQuery" style="margin: 0; padding: 0; position: fixed; width: 20px; height: 32px; right: 100px; bottom: 50vh; color: black; background: white; opacity: 80%;">
+                    <p style="text-align: center; padding: 4px 4px; margin: 0;font-size: 16px; user-select:none;" id="switchContent">></p>
+                </div>
+            `).appendTo($("body")[0]);
+            $("#switchQuery").on("click", function () {
+                if ($("#queryButton").width() != 0) {
+                    $("#queryButton").animate({width: "0px"});
+                    $("#switchQuery").animate({right: "0px"});
+                    $("#switchContent")[0].innerText = "<";
+                }
+                else {
+                    $("#queryButton").animate({width: "100px"});
+                    $("#switchQuery").animate({right: "100px"});
+                    $("#switchContent")[0].innerText = ">";
+                }
+            });
+        }
+        
+
         if (markdownPalettes != undefined || document.getElementById("feed-content") != null) {
             ShowSuccess("自动发表情插件已加载完毕");
         }
@@ -493,6 +671,7 @@
             addOnButton();
         });
         functionIsOn = false;
+        writeConfig();
     }
 
     function addOnButton() {
@@ -509,15 +688,13 @@
             addOffButton();
         });
         functionIsOn = true;
+        writeConfig();
     }
 
     // It seemed this function didn't work :(
     // To be fixed
     // Fixed on 2021.5.30
 
-    document.addEventListener("input", function () {
-        main();
-    })
     init();
 
 })();
