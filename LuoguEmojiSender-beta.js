@@ -24,8 +24,11 @@
     // 请注意，如果不是最后一行，该行后必须添加逗号。
     // 样例：" "/亲亲": "![](![qq_emoji: qq](https://xn--9zr.tk/qq))", "
     var userElement = {
-
-    }
+        "样例1": "XXX1.com",
+        "样例2": "XXX2.com",
+        "样例3": "XXX3.com",
+        "样例4": "XXX4.com"
+    };
 
     // -------------------------上方为用户修改配置区--------------------------------
 
@@ -53,7 +56,7 @@
     // 1.4.3 更新内容：
     // 增加了一个开关自动替换按钮，现在您可以自行决定是否自动替换文中内容了，修复了一个bug，更新了雀魂表情库
 
-    var functionIsOn = true;
+    var functionIsOn = true, seamlessMode = false, queryIsOn = true;
 
     const replaceElement = {
         "/ybyb": "![qq_emoji: ybyb](https://z3.ax1x.com/2021/05/30/2VUvAH.png)",
@@ -150,8 +153,8 @@
         "/jie": "![qq_emoji: jie](https://xn--9zr.tk/jie)",
         "/jk": "![qq_emoji: jk](https://xn--9zr.tk/jk)",
         "/jw": "![qq_emoji: jw](https://xn--9zr.tk/jw)",
-        "/jx": "![qq_emoji: jy](https://xn--9zr.tk/jx)",
-        "/jy": "![qq_emoji: jx](https://xn--9zr.tk/jy)",
+        "/jx": "![qq_emoji: jx](https://xn--9zr.tk/jx)",
+        "/jy": "![qq_emoji: jy](https://xn--9zr.tk/jy)",
         "/ka": "![qq_emoji: ka](https://xn--9zr.tk/ka)",
         "/kb": "![qq_emoji: kb](https://xn--9zr.tk/kb)",
         "/kel": "![qq_emoji: kel](https://xn--9zr.tk/kel)",
@@ -411,7 +414,7 @@
         for (let i in replaceElement) {
             let changedStr = prefix + i + suffix;
             while (getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "zr.tk" && getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)) != "jsoul") {
-                console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
+                // console.log(getSubString(stringToChange, stringToChange.lastIndexOf(changedStr)))
                 isChanged = true;
                 // stringToChange = stringToChange.replace(changedStr, replaceElement[i]);
                 stringToChange = sliceString(stringToChange, 0, stringToChange.lastIndexOf(changedStr) - 1) + replaceElement[i] + sliceString(stringToChange, stringToChange.lastIndexOf(changedStr) + changedStr.length, stringToChange.length - 1);
@@ -466,13 +469,22 @@
     function writeConfig() {
         lsSet("LuoguEmojiSenderPrefix", prefix);
         lsSet("LuoguEmojiSenderSuffix", suffix);
-        lsSet("LuoguEmojiSenderIsOn", functionIsOn);
+        lsSet("LuoguEmojiSenderIsOn", JSON.stringify(functionIsOn));
+        lsSet("LuoguEmojiSenderIsSeamless", JSON.stringify(seamlessMode));
+        lsSet("LuoguEmojiSenderQueryIsOn", JSON.stringify(queryIsOn));
+        lsSet("LuoguEmojiSenderUserElements", JSON.stringify(userElement, null, 4));
     }
 
     function readConfig() {
-        prefix = lsGet("LuoguEmojiSenderPrefix", prefix);
-        suffix = lsGet("LuoguEmojiSenderSuffix", suffix);
-        functionIsOn = lsGet("LuoguEmojiSenderIsOn", functionIsOn);
+        prefix = lsGet("LuoguEmojiSenderPrefix");
+        suffix = lsGet("LuoguEmojiSenderSuffix");
+        functionIsOn = JSON.parse(lsGet("LuoguEmojiSenderIsOn"));
+        seamlessMode = JSON.parse(lsGet("LuoguEmojiSenderIsSeamless"));
+        queryIsOn = JSON.parse(lsGet("LuoguEmojiSenderQueryIsOn"));
+        if (seamlessMode == true) {
+            prefix = "", suffix = "";
+        }
+        userElement = JSON.parse(lsGet("LuoguEmojiSenderUserElements"));
     }
 
     function lsGet(x = "") {
@@ -485,9 +497,39 @@
 
     var setting = new Object;
 
-    setting.openSetting = function() {
-        let div = document.createElement("div");
-        
+    setting.openSetting = function () {
+        $("#lesSettingDiv").slideToggle();
+        if (seamlessMode == true) {
+            document.getElementsByName("seamless")[0].click();
+        }
+        else {
+            document.getElementsByName("seamless")[1].click();
+        }
+        if (queryIsOn == true) {
+            document.getElementsByName("query")[0].click();
+        }
+        else {
+            document.getElementsByName("query")[1].click();
+        }
+    }
+
+    setting.cancelSetting = function () {
+        if (confirm("当前设置未保存，确认取消？") == true) {
+            location.reload();
+        }
+    }
+
+    setting.saveSetting = function () {
+        if (confirm("确认保存当前设置？") == true) {
+            seamlessMode = $("[name='seamless']")[0].checked;
+            userElement = JSON.parse($("#userElementBox")[0].value);
+            prefix = $("[name='prefix']")[0].value;
+            suffix = $("[name='suffix']")[0].value;
+            queryIsOn = $("[name='query']")[0].checked;
+            writeConfig();
+            alert("保存成功");
+            location.reload();
+        }
     }
 
     function init() {
@@ -521,14 +563,96 @@
             main();
         })
 
-        $(` <p>
+        if (document.getElementById("feed-content") != null) {
+            $(` <p>
                 <strong>插件设置</strong><br>
                 <a id="LuoguEmojiSenderSetting" target="_blank">LuoguEmojiSender 设置</a>
                 <br>
             </p>`).appendTo($(".am-hide-sm"));
-        $("#LuoguEmojiSenderSetting").on("click", function () {
-            setting.openSetting();
-        });
+            $("#LuoguEmojiSenderSetting").on("click", function () {
+                setting.openSetting();
+            });
+            $(` 
+            <div id="lesSettingDiv" style="display: none">
+            <p style="text-align: center; font-weight: bold">LuoguEmojiSender 设置</p>
+            <hr>
+            <form name="lesSetting">
+                <strong>
+                    无缝模式：
+                </strong>
+                <input type="radio" name="seamless" value="enabled" >启用</input>
+                <input type="radio" name="seamless" value="disabled" >禁用</input>
+                <br>
+                自定义前缀: <input type="text" name="prefix" style="width: 100px; text-align: center">
+                <br>
+                自定义后缀: <input type="text" name="suffix" style="width: 100px; text-align: center">
+                <br>
+                <strong>
+                    查表情按钮：
+                </strong>
+                <input type="radio" name="query" value="enabled" >启用</input>
+                <input type="radio" name="query" value="disabled" >禁用</input>
+                <br>
+                用户定义表情：<br>
+                <textarea style="height: 200px; font-size: 12px; width: 218.59px; padding: 10px" id="userElementBox"></textarea>
+            </form>
+            <br>
+            <button id="saveSetting" onclick="setting.saveSetting()" style="color: white; background-color: #dd514c; border: none; width: 80px; height: 32px; font-size: 16px; float: left;">
+                保存
+            </button>
+            <button id="cancelSetting" onclick="setting.cancelSetting()" style="color: white; background-color: #dd514c; border: none; width: 80px; height: 32px; font-size: 16px; float: right;">
+                取消
+            </button>
+            <br>
+        </div>
+            `).appendTo($(".am-hide-sm"));
+            $("#saveSetting").on("click", function () {
+                setting.saveSetting();
+            });
+            $("#cancelSetting").on("click", function () {
+                setting.cancelSetting();
+            });
+            $("#userElementBox")[0].value = JSON.stringify(userElement, null, 4);
+            $("[name='seamless']").on("click", function () {
+                if ($("[name='seamless']")[1].checked == true) {
+                    $("[name='prefix']")[0].disabled = false;
+                    $("[name='suffix']")[0].disabled = false;
+                    $("[name='prefix']")[0].value = prefix;
+                    $("[name='suffix']")[0].value = suffix;
+                }
+                else {
+                    $("[name='prefix']")[0].disabled = true;
+                    $("[name='suffix']")[0].disabled = true;
+                    $("[name='prefix']")[0].value = "";
+                    $("[name='suffix']")[0].value = "";
+                }
+            });
+        }
+
+        if (markdownPalettes != undefined || document.getElementById("feed-content") != null) {
+            $(`
+                <div id="queryButton" style="margin: 0; padding: 0; position: fixed; width: 100px; height: 32px; right: 0px; bottom: 50vh; color: black; background: white; opacity: 80%;">
+                <a href=""><p style="text-align: center; padding: 4px 0; margin: 0;font-size: 16px; user-select:none;">查看表情</p></a>
+                </div>
+                <div id="switchQuery" style="margin: 0; padding: 0; position: fixed; width: 20px; height: 32px; right: 100px; bottom: 50vh; color: black; background: white; opacity: 80%;">
+                    <p style="text-align: center; padding: 4px 4px; margin: 0;font-size: 16px; user-select:none;" id="switchContent">></p>
+                </div>
+            `).appendTo($("body")[0]);
+
+            $("#switchQuery").on("click", function () {
+                if ($("#queryButton").width() != 0) {
+                    $("#queryButton").animate({width: "0px"});
+                    $("#switchQuery").animate({right: "0px"});
+                    $("#switchContent")[0].innerText = "<";
+                }
+                else {
+                    $("#queryButton").animate({width: "100px"});
+                    $("#switchQuery").animate({right: "100px"});
+                    $("#switchContent")[0].innerText = ">";
+                }
+            });
+        }
+        
 
         if (markdownPalettes != undefined || document.getElementById("feed-content") != null) {
             ShowSuccess("自动发表情插件已加载完毕");
