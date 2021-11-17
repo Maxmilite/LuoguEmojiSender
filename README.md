@@ -13,7 +13,7 @@ GreasyFork 地址：[https://greasyfork.org/zh-CN/scripts/426868-luoguemojisende
 感谢以下贡献者：
 - [洛谷: 犇犇犇犇](https://www.luogu.com.cn/user/35998)
 - [洛谷: yihra1207](https://www.luogu.com.cn/discuss/show/208902)
-- [洛谷：WYXkk](https://www.luogu.com.cn/user/130151)
+- [洛谷: WYXkk](https://www.luogu.com.cn/user/130151)
 
 # 0. 前言
 
