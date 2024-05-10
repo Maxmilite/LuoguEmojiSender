@@ -1,3 +1,12 @@
+# 声明
+
+这个项目是我在高中时期自娱自乐编写的。当时工程代码水平有限，代码实现上会有很多纰漏。
+
+目前由于学业压力较大，暂时没有精力继续维护这个项目，因此无法保证该插件可用性，敬请谅解。
+
+相关工作：
+- <https://www.luogu.com.cn/article/71oyd36d>
+
 # LuoguEmojiSender
 
 A TamperMonkey addon which can help you send QQ emoji conveniently.
